@@ -1,0 +1,40 @@
+<resources>
+    <string name="app_name">Chat4Meal</string>
+    <string name="close"></string>
+    <string name="open"></string>
+    <string name="title_activity_main2">Main2Activity</string>
+    <string name="nonet">You\'re Not Connected to the Internet! click me To Enable Data !</string>
+    <string name="my_cart">My Cart</string>
+    <string name="delete">DELETE</string>
+    <string name="order_now"></string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
+    <string name="title_activity_welcome">Home Screen</string>
+    <string name="next">NEXT</string>
+    <string name="skip">SKIP</string>
+    <string name="start">GOT IT</string>
+    <string name="white">#ffffff</string>
+    <string name="add_to_favourite"></string>
+    <string name="pls">Tap on the settings to Turn on Data !</string>
+    <string name="clicked_item"> %1$s</string>
+    <string name="long_clicked_item"> %1$s</string>
+
+    <string name="slide_1_title">WakaMarket</string>
+    <string name="slide_1_desc">Please i will need some texts here and also images too...</string>
+
+    <string name="slide_2_title">Title</string>
+    <string name="slide_2_desc">Please i will need some texts here and also images too...</string>
+
+    <string name="slide_3_title">Title</string>
+    <string name="slide_3_desc">Please i will need some texts here and also images too...</string>
+
+    <string name="slide_4_title">Title</string>
+    <string name="slide_4_desc">Book tickets of any transportation and travel the world!</string>
+
+    <string name="play_again_desc">To see the welcome slider again, goto Settings -> apps -> welcome slider -> clear data</string>
+    <string name="play_again">Play Again</string>
+
+    <string name="action_settings">Settings</string>
+</resources>

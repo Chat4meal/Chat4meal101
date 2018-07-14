@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+    <Button
+        android:id="@+id/sendButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:text="send"
+        />
+    <EditText
+        android:id="@+id/msgBox"
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@+id/sendButton"
+        android:gravity="left"
+        android:longClickable="false"
+        />
+    <EditText
+        android:id="@+id/chatBox"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:editable="false"
+        android:layout_above="@+id/msgBox"
+        android:scrollbars="vertical"
+        android:gravity="left|top"
+        android:isScrollContainer="true"
+        android:cursorVisible="false"
+        android:longClickable="false"
+        android:clickable="false"
+        android:autoLink="all"
+        />
+</RelativeLayout>
+
