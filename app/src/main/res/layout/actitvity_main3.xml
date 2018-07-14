@@ -20,25 +20,9 @@
             android:id="@+id/toolbar_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@color/colorAccent"
             app:contentScrim="?attr/colorPrimary"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            android:background="@color/colorAccent">
-
-            <TextView
-                android:id="@+id/rece"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_above="@+id/recyclerView"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_marginEnd="15dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="15dp"
-                android:layout_marginTop="116dp"
-                android:paddingBottom="12dp"
-                android:textSize="20dp"
-                android:text="@string/app_name"
-                android:textColor="@color/white" />
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/expandedImage"
@@ -47,6 +31,26 @@
                 android:src="@drawable/wakamark"
                 app:layout_collapseMode="parallax"
                 app:layout_collapseParallaxMultiplier="0.7" />
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/rece"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginBottom="13dp"
+                    android:layout_marginLeft="33dp"
+                    android:layout_marginStart="33dp"
+                    android:paddingBottom="12dp"
+                    android:text="@string/app_name"
+                    android:textColor="@color/white"
+                    android:textSize="20dp" />
+            </RelativeLayout>
 
         </android.support.design.widget.CollapsingToolbarLayout>
 

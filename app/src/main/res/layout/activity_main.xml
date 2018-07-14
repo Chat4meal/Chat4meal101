@@ -25,10 +25,7 @@
                 android:background="@color/nav"
                 android:layout_height="?attr/actionBarSize"
                 android:theme="@style/Animation.AppCompat.Dialog" />
-        <br.com.liveo.searchliveo.SearchLiveo
-            android:id="@+id/search_liveo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+
 
         <FrameLayout
             android:id="@+id/frame"
