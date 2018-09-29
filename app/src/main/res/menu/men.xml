@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/order_now"
-        android:orderInCategory="100"
-        android:title="Order Now" />
-    <item
         android:id="@+id/action_add_favourite"
         android:orderInCategory="101"
         android:title="Add to favourite" />

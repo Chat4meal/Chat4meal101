@@ -12,15 +12,19 @@
         android:layout_alignParentRight="true"
         android:text="send"
         />
+
     <EditText
         android:id="@+id/msgBox"
-        android:layout_height="wrap_content"
         android:layout_width="fill_parent"
-        android:layout_alignParentBottom="true"
-        android:layout_toLeftOf="@+id/sendButton"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/sendButton"
+        android:layout_marginEnd="115dp"
+        android:layout_marginRight="115dp"
+        android:layout_marginTop="34dp"
         android:gravity="left"
-        android:longClickable="false"
-        />
+        android:longClickable="false" />
     <EditText
         android:id="@+id/chatBox"
         android:layout_width="fill_parent"

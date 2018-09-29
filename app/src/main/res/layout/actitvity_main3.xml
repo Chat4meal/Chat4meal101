@@ -24,14 +24,6 @@
             app:contentScrim="?attr/colorPrimary"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/expandedImage"
-                android:layout_width="match_parent"
-                android:layout_height="120dp"
-                android:src="@drawable/wakamark"
-                app:layout_collapseMode="parallax"
-                app:layout_collapseParallaxMultiplier="0.7" />
-
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
@@ -53,6 +45,14 @@
                     android:textSize="20dp" />
             </RelativeLayout>
 
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/expandedImage"
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:src="@drawable/wakamark"
+                app:layout_collapseMode="parallax"
+                app:layout_collapseParallaxMultiplier="0.7" />
+
         </android.support.design.widget.CollapsingToolbarLayout>
 
     </android.support.design.widget.AppBarLayout>
@@ -63,7 +63,7 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/app_bar"
         android:layout_centerHorizontal="true"
-        android:background="#f4f6f7"
+        android:background="@drawable/peppy_paneer"
         android:clipToPadding="false"
         android:paddingBottom="50dp"
         android:paddingTop="0dp" />
@@ -100,6 +100,7 @@
                 android:layout_marginEnd="20dp"
                 android:background="@drawable/round_button"
                 android:hint="Type a Message"
+                android:maxLength="540"
                 android:textSize="18sp"/>
         </RelativeLayout>
 
@@ -136,6 +137,7 @@
         android:layout_marginEnd="38dp"
         android:layout_marginRight="38dp"
         android:layout_marginTop="121dp"
+        app:backgroundTint="@color/white"
         android:src="@drawable/ic_check_circle_black_24dp"
         android:id="@+id/floatingActionButton" />
 

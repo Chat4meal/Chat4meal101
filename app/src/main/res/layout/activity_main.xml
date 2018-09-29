@@ -15,7 +15,7 @@
         android:background="@color/white"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:padding="0dp">
+       >
 
 
 
@@ -25,6 +25,7 @@
                 android:background="@color/nav"
                 android:layout_height="?attr/actionBarSize"
                 android:theme="@style/Animation.AppCompat.Dialog" />
+
 
 
         <FrameLayout

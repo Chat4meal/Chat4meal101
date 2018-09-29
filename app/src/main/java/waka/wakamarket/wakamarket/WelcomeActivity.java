@@ -1,5 +1,7 @@
 package waka.wakamarket.wakamarket;
 
+import android.*;
+import android.app.Dialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -10,14 +12,19 @@ import android.os.Build;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.Html;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.vistrav.ask.Ask;
 
 public class WelcomeActivity extends AppCompatActivity {
 
@@ -28,6 +35,11 @@ public class WelcomeActivity extends AppCompatActivity {
     private int[] layouts;
     private Button btnSkip, btnNext;
     private PrefManager prefManager;
+    private TextView txtDetails;
+    private EditText inputName, inputEmail;
+    private Button btnSave;
+    private ImageView chooseDp;
+    Dialog reg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +79,7 @@ public class WelcomeActivity extends AppCompatActivity {
         // making notification bar transparent
         changeStatusBarColor();
 
+
         myViewPagerAdapter = new MyViewPagerAdapter();
         viewPager.setAdapter(myViewPagerAdapter);
         viewPager.addOnPageChangeListener(viewPagerPageChangeListener);
@@ -88,7 +101,7 @@ public class WelcomeActivity extends AppCompatActivity {
                     // move to next screen
                     viewPager.setCurrentItem(current);
                 } else {
-                    launchHomeScreen();
+                   launchHomeScreen();
                 }
             }
         });
@@ -119,7 +132,7 @@ public class WelcomeActivity extends AppCompatActivity {
 
     private void launchHomeScreen() {
         prefManager.setFirstTimeLaunch(false);
-        startActivity(new Intent(WelcomeActivity.this,PhoneNumberAuthetication.class));
+        startActivity(new Intent(WelcomeActivity.this,Main2Activity.class));
         finish();
     }
 
@@ -199,5 +212,17 @@ public class WelcomeActivity extends AppCompatActivity {
             View view = (View) object;
             container.removeView(view);
         }
+    }
+    private boolean validate() {
+        boolean isValid = false;
+        String email = inputName.getText().toString();
+        String password = inputEmail.getText().toString();
+        if (TextUtils.isEmpty(email))
+            inputName.setError("Required");
+        else if (TextUtils.isEmpty(password))
+            inputEmail.setError("Required");
+        else
+            isValid = true;
+        return isValid;
     }
 }

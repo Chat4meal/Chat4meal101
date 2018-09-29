@@ -18,6 +18,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,8 +29,6 @@ import java.util.List;
 
 public class PizzaAdapter extends RecyclerView.Adapter<PizzaAdapter.CustomViewHolder> {
     private Context mContext;
-    private List<Integer> selectedIds = new ArrayList<>();
-    private List<Pizza> contactListFiltered;
     private List<Pizza> pizzas,items;
     private RecyclerViewItemClickListener recyclerViewItemClickListener;
     public PizzaAdapter(List<Pizza> pizzas, Context mContext) {
@@ -57,77 +57,14 @@ public class PizzaAdapter extends RecyclerView.Adapter<PizzaAdapter.CustomViewHo
     @Override
     public void onBindViewHolder(final CustomViewHolder holder, final int position) {
         final Pizza pizza = pizzas.get(position);
+        Picasso.get()
+                .load(pizza.getImageUrl())
+                .into(holder.image);
         holder.name.setText(pizza.getName());
         holder.price.setText(pizza.getPrice());
-        holder.image.setImageResource(pizza.getImageResource());
-
-
-        holder.menu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
 
 
 
-            }
-        });
-
-    }
-
-
-
-
-
-    public Filter getFilter() {
-        return new Filter() {
-            @Override
-            protected FilterResults performFiltering(CharSequence charSequence) {
-                String charString = charSequence.toString();
-                if (charString.isEmpty()) {
-                    contactListFiltered = pizzas;
-                } else {
-                    List<Pizza> filteredList = new ArrayList<>();
-                    for (Pizza row :pizzas ) {
-
-                        // name match condition. this might differ depending on your requirement
-                        // here we are looking for name or phone number match
-                        if (row.getName().toLowerCase().contains(charString.toLowerCase()) || row.getPrice().contains(charSequence)) {
-                            filteredList.add(row);
-                        }
-                    }
-
-                    contactListFiltered = filteredList;
-                }
-
-                FilterResults filterResults = new FilterResults();
-                filterResults.values = contactListFiltered;
-                return filterResults;
-            }
-
-            @Override
-            protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-                contactListFiltered = (ArrayList<Pizza>) filterResults.values;
-                notifyDataSetChanged();
-            }
-        };
-    }
-
-
-
-    public void setSelectedIds(List<Integer> selectedIds) {
-        this.selectedIds = selectedIds;
-        notifyDataSetChanged();
-    }
-    /**
-     * Display options on click of menu icon (3 dots)
-     *
-     * @param view
-     */
-    private void showOptionsMenu(View view) {
-        PopupMenu popup = new PopupMenu(mContext, view);
-        MenuInflater inflater = popup.getMenuInflater();
-        inflater.inflate(R.menu.men, popup.getMenu());
-        popup.setOnMenuItemClickListener(new PizzaMenuItemClickListener());
-        popup.show();
     }
 
     @Override
@@ -150,39 +87,7 @@ public class PizzaAdapter extends RecyclerView.Adapter<PizzaAdapter.CustomViewHo
             name = (TextView) itemView.findViewById(R.id.pizzaName);
             price = (TextView) itemView.findViewById(R.id.pizzaPrice);
             image = (ImageView) itemView.findViewById(R.id.pizzaImage);
-            menu = (ImageView) itemView.findViewById(R.id.menuDots);
             card= (CardView) itemView.findViewById(R.id.car);
         }
     }
-
-
-
-
-    private class PizzaMenuItemClickListener implements PopupMenu.OnMenuItemClickListener {
-        /**
-         * Display Toast message on click of the options in the menu
-         *
-         * @param item
-         * @return
-         */
-        @Override
-        public boolean onMenuItemClick(MenuItem item) {
-            switch (item.getItemId()) {
-                case R.id.action_add_favourite:
-
-                    Toast.makeText(mContext, "Added to favourite"  , Toast.LENGTH_SHORT).show();
-                    return true;
-                case R.id.order_now:
-                    Intent intent = new Intent(mContext, Main3Activity.class);
-                  mContext.startActivity(intent);
-
-
-
-
-            }
-            return false;
-        }
-    }
-
-
 }

@@ -7,38 +7,47 @@
     >
 
 
-
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/choosedp1"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
+        android:layout_alignLeft="@+id/btn_save"
+        android:layout_alignStart="@+id/btn_save"
+        android:layout_below="@+id/txt_user"
+        android:layout_marginTop="107dp"
+        android:onClick="selectImage"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_account_box_black_24dp" />
     <TextView
-    android:id="@+id/txt_user"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:paddingBottom="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_horizontal_margin"
-    android:textSize="20dp" />
+        android:id="@+id/txt_user"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_horizontal_margin"
+        android:textSize="20dp" />
 
 
     <EditText
-        android:id="@+id/name"
+        android:id="@+id/usename"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/email"
-        android:layout_alignLeft="@+id/email"
-        android:layout_alignStart="@+id/email"
-        android:layout_marginBottom="26dp"
+        android:layout_below="@+id/choosedp1"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="70dp"
         android:background="@drawable/round_button"
         android:hint="Username"
         android:inputType="textCapWords"
         android:maxLength="10"
         android:maxLines="1" />
 
-
     <EditText
-        android:id="@+id/email"
+        android:id="@+id/phone"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/btn_save"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="33dp"
+        android:layout_alignLeft="@+id/usename"
+        android:layout_alignStart="@+id/usename"
+        android:layout_alignTop="@+id/usename"
+        android:layout_marginTop="68dp"
         android:background="@drawable/round_button"
         android:hint="Phone"
         android:inputType="phone"
@@ -51,25 +60,13 @@
         style="?android:textAppearanceSmall"
         android:layout_width="130dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/phone"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="66dp"
-
+        android:layout_marginTop="12dp"
         android:background="@drawable/round_button"
+        android:onClick="uploadImage"
         android:text="Next"
         android:textStyle="bold" />
-
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/choosedp"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:layout_above="@+id/name"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="22dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/wakamark" />
-
-
 
 
 </RelativeLayout>

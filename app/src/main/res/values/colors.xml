@@ -11,7 +11,7 @@
 <color name="white">#ffffff</color>
     <color name="colorBackroundWhite">#f0f2ea</color>
     <!-- Screens background color-->
-    <color name="bg_screen1">#f64c73</color>
+    <color name="bg_screen1">#848182</color>
     <color name="bg_screen2">#20d2bb</color>
     <color name="bg_screen3">#3395ff</color>
     <color name="bg_screen4">#c873f4</color>
@@ -20,10 +20,10 @@
     <color name="description">#a9a9a9</color>
 
     <!-- dots inactive colors -->
-    <color name="dot_dark_screen1">#d1395c</color>
+    <color name="dot_dark_screen1">#5039d1</color>
     <color name="dot_dark_screen2">#14a895</color>
     <color name="dot_dark_screen3">#2278d4</color>
-    <color name="dot_dark_screen4">#a854d4</color>
+    <color name="dot_dark_screen4">#2af287</color>
 
     <!-- dots active colors -->
     <color name="dot_light_screen1">#f98da5</color>

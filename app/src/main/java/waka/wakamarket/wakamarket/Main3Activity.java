@@ -44,14 +44,12 @@ import ai.api.model.AIRequest;
 import ai.api.model.AIResponse;
 import ai.api.model.Result;
 import com.google.gson.JsonElement;
+import com.squareup.picasso.Picasso;
+
 import java.util.Map;
 
 
 public class Main3Activity extends AppCompatActivity implements AIListener{
-    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
-
-    private String userId=FirebaseAuth.getInstance().getCurrentUser().getUid();
 
     RecyclerView recyclerView;
     EditText editText;
@@ -67,18 +65,32 @@ FloatingActionButton detailsD;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.actitvity_main3);
+        // requesting permission for audio record
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO},1);
+        // dialog
       final  Dialog confirm = new Dialog(Main3Activity.this);
+        confirm.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
+        confirm.getWindow().setLayout(RelativeLayout.LayoutParams.FILL_PARENT, RelativeLayout.LayoutParams.FILL_PARENT);
         Intent receiverdIntent = getIntent();
        final String received=receiverdIntent.getStringExtra("proD");
+       // fetching data from first.java
         Intent reprice = getIntent();
         final String rep=reprice.getStringExtra("price");
-        final Bitmap bitmap = (Bitmap)this.getIntent().getParcelableExtra("Bitmap");
-       final String ree=received;
+        final ImageView viewBitmap = (ImageView)findViewById(R.id.expandedImage);
+// getting image uri from first.java
+       final String ima=reprice.getStringExtra("image");
+        Picasso.get().load(ima).into(viewBitmap);
+        // getttin the store data from first.java
+        final String storeadd=reprice.getStringExtra("storeAdd");
+        final String storeima=reprice.getStringExtra("storeImage");
+        final String storename=reprice.getStringExtra("storeN");
+        final String storetime=reprice.getStringExtra("storeTime");
+        final String ree=received;
         confirm.requestWindowFeature(Window.FEATURE_NO_TITLE);
         confirm.setContentView(R.layout.confirm);
 
-detailsD=(FloatingActionButton)findViewById(R.id.floatingActionButton);
+// proceeding to cart
+        detailsD=(FloatingActionButton)findViewById(R.id.floatingActionButton);
 detailsD.setOnClickListener(new View.OnClickListener() {
     @Override
     public void onClick(View view) {
@@ -88,23 +100,38 @@ detailsD.setOnClickListener(new View.OnClickListener() {
 
 
 
-        TextView dd=(TextView) confirm.findViewById(R.id.checkFood);
-        ImageView di=(ImageView)confirm.findViewById(R.id.checkoutI) ;
-        TextView price=(TextView)confirm.findViewById(R.id.prii);
-        di.setImageBitmap(bitmap);
-        dd.setText(ree);
-        price.setText("NGN"+" " + rep);
 
-        confirm.show();
     }
 });
 
-        ImageView viewBitmap = (ImageView)findViewById(R.id.expandedImage);
+// setting things up
+viewBitmap.setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void onClick(View view) {
+confirm.show();
+
+        TextView dd=(TextView) confirm.findViewById(R.id.checkFood);
+        TextView storeName=(TextView) confirm.findViewById(R.id.storename);
+        TextView storeAdd=(TextView) confirm.findViewById(R.id.storeAdd);
+        TextView StoreTime=(TextView) confirm.findViewById(R.id.time);
+        ImageView di=(ImageView)confirm.findViewById(R.id.checkoutI) ;
+        ImageView storeimage=(ImageView)confirm.findViewById(R.id.storeimage) ;
+        TextView price=(TextView)confirm.findViewById(R.id.prii);
+        Picasso.get().load(ima).into(di);
+        storeAdd.setText(storeadd);
+        storeName.setText(storename);
+        StoreTime.setText(storetime);
+        Picasso.get().load(storeima).placeholder(R.drawable.common_google_signin_btn_icon_dark).into(storeimage);
+        dd.setText(ree);
+        price.setText("NGN"+" " + rep);
 
 
-        viewBitmap.setImageBitmap(bitmap);
+    }
+});
 
 
+
+// chat recycler
         recyclerView = (RecyclerView)findViewById(R.id.recyclerView);
         editText = (EditText)findViewById(R.id.editText);
         addBtn = (RelativeLayout)findViewById(R.id.addBtn);
@@ -140,7 +167,6 @@ detailsD.setOnClickListener(new View.OnClickListener() {
                 if (!message.equals("")) {
 
                     ChatMessage chatMessage = new ChatMessage(message, "user");
-                    ref.child(userId).setValue(chatMessage);
                     ref.child("chat").push().setValue(chatMessage);
 
                     aiRequest.setQuery(message);
@@ -178,7 +204,7 @@ detailsD.setOnClickListener(new View.OnClickListener() {
         });
 
 
-
+// sending actions
         editText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -256,6 +282,7 @@ detailsD.setOnClickListener(new View.OnClickListener() {
 
 
     }
+    // animation effects
     public void ImageViewAnimatedChange(Context c, final ImageView v, final Bitmap new_image) {
         final Animation anim_out = AnimationUtils.loadAnimation(c, R.anim.zoom_out);
         final Animation anim_in  = AnimationUtils.loadAnimation(c, R.anim.zoom_in);
@@ -292,7 +319,7 @@ detailsD.setOnClickListener(new View.OnClickListener() {
         ChatMessage chatMessage = new ChatMessage(reply, "bot");
         ref.child("chat").push().setValue(chatMessage);
 
-
+Toast.makeText(Main3Activity.this, (CharSequence) chatMessage0,Toast.LENGTH_LONG);
     }
 
     @Override

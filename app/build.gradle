@@ -16,6 +16,7 @@ android {
             }
         }
 
+
     }
     buildTypes {
         release {
@@ -62,15 +63,19 @@ dependencies {
     // volley http library
     implementation 'com.android.volley:volley:1.0.0'
     implementation 'com.google.code.gson:gson:2.6.2'
-    implementation 'com.squareup.picasso:picasso:2.5.2'
+    implementation 'com.squareup.picasso:picasso:2.71828'
     compile 'ai.api:sdk:2.0.7@aar'
+    implementation 'com.github.jrvansuita:PickImage:2.2.4'
     compile 'ai.api:libai:1.4.8'
     compile 'com.google.code.gson:gson:2.3.1'
     compile 'commons-io:commons-io:2.4'
     implementation 'de.hdodenhof:circleimageview:2.2.0'
-
-
-
+    compile 'com.snatik:storage:2.1.0'
+    implementation 'com.afollestad.material-dialogs:core:0.9.6.0'
+    compile 'com.github.armcha:SimplePermissions:1.0.0'
+    compile 'com.vistrav:ask:2.5'
+    compile 'com.github.livefront:bridge:v1.1.2'
+    compile 'com.jonathanfinerty.once:once:1.2.2'
 
 }
 apply plugin: 'com.google.gms.google-services'

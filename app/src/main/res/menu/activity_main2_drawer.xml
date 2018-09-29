@@ -18,11 +18,14 @@
             android:icon="@drawable/ic_favorite_black_24dp"
             android:title="Favourite"
             android:visible="true" />
+        <item
+            android:id="@+id/set"
+            android:icon="@drawable/ic_settings_applications_black_24dp"
+            android:title="@string/set"
+            android:visible="true" />
 
     </group>
-    <item android:id="@+id/search"
-        android:title="Search..."
-        android:icon="@drawable/ic_search_black_24dp"
-        />
 
 </menu>
+
+

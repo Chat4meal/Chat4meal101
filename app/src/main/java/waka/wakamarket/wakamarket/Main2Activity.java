@@ -4,9 +4,16 @@ import android.app.Notification;
 import android.app.ProgressDialog;
 import android.app.TaskStackBuilder;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.AssetManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import de.hdodenhof.circleimageview.CircleImageView;
+import jonathanfinerty.once.Once;
+
+import android.Manifest;
+
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -27,7 +34,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
+
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -41,11 +51,16 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.vansuita.pickimage.bean.PickResult;
+import com.vansuita.pickimage.bundle.PickSetup;
+import com.vansuita.pickimage.dialog.PickImageDialog;
+import com.vansuita.pickimage.listeners.IPickResult;
+import com.vistrav.ask.Ask;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
-public class Main2Activity extends AppCompatActivity {
+public  class Main2Activity  extends AppCompatActivity  implements IPickResult {
 
     private static final String TAG = Main2Activity.class.getSimpleName();
     private TextView txtDetails;
@@ -54,23 +69,17 @@ public class Main2Activity extends AppCompatActivity {
     private ImageView chooseDp;
     private DatabaseReference mFirebaseDatabase;
     private FirebaseDatabase mFirebaseInstance;
-    Uri uri;
-    private final Integer PICK_IMAGE_REQUEST=1;
+    private final Integer PICK_IMAGE_REQUEST = 1;
     Bitmap bitmap;
-    private Uri mImageUri ;
+    StorageReference mStore;
+    private Uri mImageUri;
     private ProgressDialog mProgress;
     private static final int GALLERY_REQUEST = 1;
-    private final Integer request_code=1;
-
-    StorageReference mStorage;
-
-
-
-
-    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
-
-    private String userId=FirebaseAuth.getInstance().getCurrentUser().getUid();
+    private final Integer request_code = 1;
+    EditText inputAddress;
+    ProgressDialog progressDialog;
+    pref2 prefManager;
+    String imagepath;
 
 
 
@@ -78,138 +87,106 @@ public class Main2Activity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        prefManager = new pref2(this);
+        if (!prefManager.isFirstTimeLaunch()) {
+            launchHomeScreen();
+            finish();
+        }
         setContentView(R.layout.activity_main2);
 
 
 
+        Ask.on(this)
+                .id(1234)
+                .forPermissions(Manifest.permission.CAMERA
+                        , Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
+                .withRationales("permission needed for Camera",
+                        "In order to save file you will need to grant storage permission","Allow Location","Allow Location2") //optional
+                .go();
+
         txtDetails = (TextView) findViewById(R.id.txt_user);
-        inputName = (EditText) findViewById(R.id.name);
-        inputEmail = (EditText) findViewById(R.id.email);
-        btnSave=(Button)findViewById(R.id.btn_save);
-       chooseDp=(ImageView) findViewById(R.id.choosedp);
-
-
-        mFirebaseInstance = FirebaseDatabase.getInstance();
-
-        // get reference to 'users' node
-        mFirebaseDatabase = mFirebaseInstance.getReference("wakamarket101");
-
-        // store app title to 'app_title' node
-
-
-        // app_title change listener
-        mFirebaseInstance.getReference("app_title").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.e(TAG, "App title updated");
-
-                String appTitle = dataSnapshot.getValue(String.class);
-
-
-                // update toolbar title
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError error) {
-                // Failed to read value
-                Log.e(TAG, "Failed to read app title value.", error.toException());
-            }
-        });
-
-       chooseDp.setOnClickListener(new View.OnClickListener() {
+        inputName = (EditText) findViewById(R.id.usename);
+        inputEmail = (EditText) findViewById(R.id.phone);
+        btnSave = (Button) findViewById(R.id.btn_save);
+        chooseDp = (ImageView) findViewById(R.id.choosedp1);
+        chooseDp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                galleryIntent.setType("image/*");
-                startActivityForResult(galleryIntent, GALLERY_REQUEST);
 
+                PickImageDialog.build(new PickSetup()).show(Main2Activity.this);
             }
         });
 
 
-        // Save / update the user
+
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 final String name = inputName.getText().toString();
                 final String email = inputEmail.getText().toString();
-                if(validate()){
+                if (validate()) {
+                    Intent intent = new Intent();
+                    intent.setClass(Main2Activity.this, MainActivity.class);
+                    intent.putExtra("username", name);
+                    intent.putExtra("number",email);
+
+                    intent.putExtra("uri",imagepath);
+
+                    finish();
+                  startActivity(intent);
+                    prefManager.setFirstTimeLaunch(false);
 
 
 
-                    StorageReference filepath = mStorage.child("contact_image").child(mImageUri.getLastPathSegment());
-
-
-                    filepath.putFile(mImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            final Uri downloadUri = taskSnapshot.getDownloadUrl();
-
-                            mFirebaseDatabase.addValueEventListener(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                    mFirebaseDatabase.child(userId).child("name").setValue(name);
-                                   mFirebaseDatabase.child(userId).child("address").setValue(email);
-                                  mFirebaseDatabase.child(userId).child("image_add").setValue(downloadUri.toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<Void> task) {
-                                            if(task.isSuccessful()){
-                                                startActivity(new Intent(Main2Activity.this, MainActivity.class));
-                                            }
-                                        }
-                                    });
-                                }
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
-                                }
-                            });
-
-                            Toast.makeText(getApplicationContext(), " Adding Complete!! ", Toast.LENGTH_SHORT).show();
-                        }
-                    }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                            double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
-
-                        }
-                    });
-                }
-                    else {
+                } else {
                     Snackbar.make(view, "Please fill Required", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();}
+                            .setAction("Action", null).show();
+                }
+
             }
         });
+
+
     }
 
 
-    // Changing button text
-
-    /**
-     * Creating new user node under 'users'
-     */
 
 
-    private boolean validate(){
-        boolean isValid=false;
-      String  email=inputName.getText().toString();
-      String  password=inputEmail.getText().toString();
-        if(TextUtils.isEmpty(email))
+
+    private boolean validate() {
+        boolean isValid = false;
+        String email = inputName.getText().toString();
+        String password = inputEmail.getText().toString();
+
+        if (TextUtils.isEmpty(email))
             inputName.setError("Required");
-        else if(TextUtils.isEmpty(password))
-          inputEmail.setError("Required");
+        else if (TextUtils.isEmpty(password))
+            inputEmail.setError("Required");
         else
-            isValid=true;
+            isValid = true;
         return isValid;
     }
 
-
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == GALLERY_REQUEST && resultCode == RESULT_OK && data!= null){
-            mImageUri = data.getData();
-     chooseDp.setImageURI(mImageUri);
+    public void onPickResult(PickResult r) {
+        if (r.getError() == null) {
+
+         r.getBitmap();
+         r.getUri();
+imagepath=r.getPath();
+chooseDp.setImageURI(Uri.parse(imagepath));
+
+        } else {
+            //Handle possible errors
+
+            Toast.makeText(this, r.getError().getMessage(), Toast.LENGTH_LONG).show();
         }
     }
+    private void launchHomeScreen() {
+        prefManager.setFirstTimeLaunch(false);
+        startActivity(new Intent(Main2Activity.this,MainActivity.class));
+        finish();
+    }
+
 }
+

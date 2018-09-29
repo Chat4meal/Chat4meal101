@@ -1,10 +1,11 @@
 package waka.wakamarket.wakamarket;
 
 /**
- * Created by Muhammad on 4/19/2018.
+ * Created by alome on 4/19/2018.
  */
 import android.app.Dialog;
 import android.app.Fragment;
+import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
@@ -12,70 +13,101 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Filter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.content.ContentValues.TAG;
+
 public class first extends Fragment {
 
     @Override
-    public View onCreateView(LayoutInflater inflater,
+    public View onCreateView(final LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.activity_scrolling,
+        final View view = inflater.inflate(R.layout.activity_scrolling,
                 container, false);
+        setHasOptionsMenu(true);
 
 
         final List<Pizza> pizzas = new ArrayList<>();
-        ArrayList<String> items=new ArrayList<>();
-        RecyclerView recyclerView;
-        final PizzaAdapter pAdapter;
-         SearchView searchView;
+        ArrayList<String> items = new ArrayList<>();
+        final RecyclerView recyclerView;
+
+        SearchView searchView;
         final ImageView proImage;
 
-        recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
-        pAdapter = new PizzaAdapter(pizzas, getActivity());
+
         RelativeLayout relativeLayout;
         final Dialog myD = new Dialog(getActivity());
         myD.setContentView(R.layout.no_network);
+        final PizzaAdapter pAdapter;
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("menus");
+        ProgressDialog pDialog;
 
 
-
+        pAdapter = new PizzaAdapter(pizzas, getActivity());
+        recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         // Create grids with 2 items in a row
-        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getActivity(), 2);
-        recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(pAdapter);
-        pAdapter.notifyDataSetChanged();
+
+
+        pDialog = new ProgressDialog(getActivity());
+
+
 
         recyclerView.addOnItemTouchListener(
                 new RecyclerItemClickListener(getActivity(), recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
                         // do whatever
-                        int pic = pizzas.get(position).getImageResource();
-                        String sear=pizzas.get(position).getName();
-                        Toast.makeText(getActivity(), getResources().getString(R.string.clicked_item, pizzas.get(position).getName()), Toast.LENGTH_SHORT).show();
+                        String pic = pizzas.get(position).getImageUrl();
+                        String sear = pizzas.get(position).getName();
                         String text = getResources().getString(R.string.clicked_item, pizzas.get(position).getName());
                         String price = getResources().getString(R.string.clicked_item, pizzas.get(position).getPrice());
-                        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), pic);
+                        String storeN=getResources().getString(R.string.clicked_item, pizzas.get(position).getStoreName());
+                        String storeAdd=getResources().getString(R.string.clicked_item, pizzas.get(position).getStAdd());
+                        String storeTime=getResources().getString(R.string.clicked_item, pizzas.get(position).getStTime());
+                        String storeImage=getResources().getString(R.string.clicked_item, pizzas.get(position).getStoreImage());
+
+
                         String proD = text;
                         Intent intent = new Intent();
                         intent.setClass(getActivity(), Main3Activity.class);
-                        intent.putExtra("Bitmap", bitmap);
+                        intent.putExtra("image",pic);
                         intent.putExtra("proD", proD);
                         intent.putExtra("price", price);
+                        intent.putExtra("storeN",storeN);
+                        intent.putExtra("storeAdd",storeAdd);
+                        intent.putExtra("storeTime",storeTime);
+                        intent.putExtra("storeImage",storeImage);
+
                         startActivity(intent);
 
 
@@ -84,12 +116,26 @@ public class first extends Fragment {
                     @Override
                     public void onLongItemClick(View view, int position) {
                         // do whatever
+                        final  Dialog confirm = new Dialog(getActivity());
+                        confirm.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                        confirm.setContentView(R.layout.favourite);
+                        confirm.show();
+
                     }
                 })
         );
 
+        if (pAdapter.getItemCount() == 0) {
+            pDialog.setMessage("Preparing Your Menu...");
+            pDialog.show();
+Toast.makeText(getActivity(),"Your Menu is empty !",Toast.LENGTH_LONG).show();
 
+        }
+        else {
+            pDialog.dismiss();
+            pDialog.hide();
 
+        }
         FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,32 +145,13 @@ public class first extends Fragment {
         });
 
 
-            Pizza pizza = new Pizza("Ewedu", R.drawable.eat2, "440");
-            pizzas.add(pizza);
-            pizza = new Pizza("Fufu", R.drawable.eat3, "365");
-            pizzas.add(pizza);
-            pizza = new Pizza("Banana", R.drawable.images, "365");
-            pizzas.add(pizza);
-            pizza = new Pizza("Egusi", R.drawable.soup, "365");
-            pizzas.add(pizza);
-            pizza = new Pizza("Egusi Soup", R.drawable.egusi, "440");
-            pizzas.add(pizza);
-            pizza = new Pizza("Eba", R.drawable.eba, "440");
-            pizzas.add(pizza);
-            pizza = new Pizza("Dodo", R.drawable.dodo, "525");
-            pizzas.add(pizza);
-            pizza = new Pizza("Non-Veg Supreme", R.drawable.non_veg_supreme, "525");
-            pizzas.add(pizza);
-            pizza = new Pizza("ALOME", R.drawable.nonetwork, "525");
-            pizzas.add(pizza);
-
-            return view;
+       Pizza pizza=new Pizza("Rice","50","https://chat4meal.com/storage/2018/08/chat4meal_logo_v.png","Alome Store","Alapere","9am -10pm","https://chat4meal.com/storage/2018/08/chat4meal_logo_v.png");
+       pizzas.add(pizza);
 
 
+        return view;
+    }
 
 
     }
-
-    }
-
 

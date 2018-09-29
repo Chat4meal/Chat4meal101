@@ -18,7 +18,7 @@ public class PrefManager {
     SharedPreferences.Editor editor;
     Context _context;
 
-    // shared pref mode
+    // shared pref mode..
     int PRIVATE_MODE = 0;
 
     // Shared preferences file name
@@ -34,7 +34,7 @@ public class PrefManager {
 
     public void setFirstTimeLaunch(boolean isFirstTime) {
         editor.putBoolean(IS_FIRST_TIME_LAUNCH, isFirstTime);
-        editor.commit();
+        editor.apply();
     }
 
     public boolean isFirstTimeLaunch() {
